@@ -1,7 +1,7 @@
-//UI를 처리하기 위한 로직
 export default class HabitPresenter {
-  constructor(habits) {
+  constructor(habits, maxHabits) {
     this.habits = habits;
+    this.maxHabits = maxHabits;
   }
 
   getHabits() {
@@ -21,7 +21,7 @@ export default class HabitPresenter {
   decrement(habit, update) {
     this.habits = this.habits.map((item) => {
       if (item.id === habit.id) {
-        const count = habit.count - 1;
+        const count = item.count - 1;
         return { ...habit, count: count < 0 ? 0 : count };
       }
       return item;
@@ -35,6 +35,9 @@ export default class HabitPresenter {
   }
 
   add(name, update) {
+    if (this.habits.length === this.maxHabits) {
+      throw new Error(`습관의 갯수는 ${this.maxHabits} 이상이 될 수 없습니다`);
+    }
     this.habits = [...this.habits, { id: Date.now(), name, count: 0 }];
     update(this.habits);
   }
